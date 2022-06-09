@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: listener-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: listener-service
+  template:
+    metadata:
+      labels:
+        app: listener-service
+    spec:
+      containers:
+        - name: listener-service
+          image: dmytrothr/listener-service:1.0.0
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: listener-service
+spec:
+  selector:
+    app: listener-service
+  ports:
+    - name: web-port
+      port: 80
+      targetPort: 80
+      protocol: TCP
